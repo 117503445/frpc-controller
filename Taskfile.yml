@@ -1,0 +1,8 @@
+version: '3'
+
+tasks:
+  default:
+    desc: "The default task" 
+    cmds:
+      - docker pull registry.cn-hangzhou.aliyuncs.com/117503445-mirror/sync:linux.amd64.docker.io.library.golang.1.23.3
+      - docker build -t 117503445/frpc-controller .
