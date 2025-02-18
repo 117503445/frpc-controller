@@ -1,0 +1,7 @@
+loginFailExit = false
+
+serverAddr = "frps"
+serverPort = 80
+transport.protocol = "websocket"
+
+auth.token = "123456"

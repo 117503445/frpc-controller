@@ -78,7 +78,7 @@ func (d *DockerWatcher) Start() {
 			ip := ""
 			for network, netInfo := range inspect.NetworkSettings.Networks {
 				// fmt.Printf("Network: %s, IP Address: %s\n", network, netInfo.IPAddress)
-				if network == "frp" {
+				if network == networkName {
 					ip = netInfo.IPAddress
 					break
 				}
@@ -173,8 +173,18 @@ func (e *Executor) Start() {
 	}()
 }
 
+// networkName is the name of docker network which frpc-controller and other containers are in.
+var networkName string
+
 func main() {
 	goutils.InitZeroLog()
+
+	networkName = os.Getenv("NETWORK_NAME")
+	if networkName == "" {
+		log.Info().Msg("NETWORK_NAME not set, use default network name `frp`")
+	} else {
+		log.Info().Str("networkName", networkName).Send()
+	}
 
 	ch := make(chan mapping)
 	watcher := NewDockerWatcher(ch)

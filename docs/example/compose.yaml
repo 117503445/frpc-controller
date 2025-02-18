@@ -1,0 +1,39 @@
+name: frpc-controller
+
+services:
+  s:
+    image: 117503445/traefik-provider-frp
+    volumes:
+      - ./config/traefik-provider-frp/config.toml:/workspace/config.toml
+      - ./config/traefik-provider-frp/traefik.tmpl:/workspace/traefik.tmpl
+  traefik:
+    image: traefik
+    volumes:
+      - ./config/traefik/traefik.yml:/etc/traefik/traefik.yaml
+    ports:
+      - "80:80"
+  frps:
+    image: snowdreamtech/frps
+    restart: unless-stopped
+    volumes:
+      - ./config/frps/frps.toml:/etc/frp/frps.toml
+  frpc-controller:
+    image: 117503445/frpc-controller
+    restart: unless-stopped
+    environment:
+      - NETWORK_NAME=frpc-controller_default
+    volumes:
+      - ./config/frpc-controller/config.toml:/workspace/config.toml
+      - /var/run/docker.sock:/var/run/docker.sock
+  app1:
+    image: traefik/whoami
+    hostname: app1
+    restart: unless-stopped
+    labels:
+      - frpc.app1=80
+  app2:
+    image: traefik/whoami
+    hostname: app2
+    restart: unless-stopped
+    labels:
+      - frpc.app2=80
