@@ -181,6 +181,7 @@ func main() {
 
 	networkName = os.Getenv("NETWORK_NAME")
 	if networkName == "" {
+		networkName = "frp"
 		log.Info().Msg("NETWORK_NAME not set, use default network name `frp`")
 	} else {
 		log.Info().Str("networkName", networkName).Send()
